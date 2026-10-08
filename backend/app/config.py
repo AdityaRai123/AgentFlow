@@ -26,7 +26,10 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = ""
     # Model used by the insight, report, reviewer and RAG agents. Override via env
     # when Google retires a model, instead of editing five call sites.
-    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_MODEL: str = "gemini-3.8-flash"
+    # Per-request timeout so a hung Gemini call fails over to the fallback path
+    # instead of leaving a workflow stuck in "running" forever.
+    GEMINI_TIMEOUT_SECONDS: int = 90
 
     # JWT Authentication
     JWT_SECRET_KEY: str = "super-secret-key-change-in-production"

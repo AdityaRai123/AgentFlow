@@ -45,7 +45,7 @@ async def insight_node(state: AgentState) -> AgentState:
             }}
             """
             
-            response = await model.generate_content_async(prompt)
+            response = await model.generate_content_async(prompt, request_options={"timeout": settings.GEMINI_TIMEOUT_SECONDS})
             data = extract_json(response.text)
             
             state["insights"] = data.get("insights", {})

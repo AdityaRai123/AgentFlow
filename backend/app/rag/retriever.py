@@ -159,7 +159,7 @@ Question: {question}
         """
         for attempt in range(1, _GENERATION_ATTEMPTS + 1):
             try:
-                response = await self.model.generate_content_async(prompt)
+                response = await self.model.generate_content_async(prompt, request_options={"timeout": settings.GEMINI_TIMEOUT_SECONDS})
                 return response.text
             except Exception as e:
                 if attempt >= _GENERATION_ATTEMPTS or not _is_rate_limit(e):

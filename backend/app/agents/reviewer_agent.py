@@ -55,7 +55,7 @@ async def reviewer_node(state: AgentState) -> AgentState:
             }}
             """
             
-            response = await model.generate_content_async(prompt)
+            response = await model.generate_content_async(prompt, request_options={"timeout": settings.GEMINI_TIMEOUT_SECONDS})
             text = response.text
             if "```json" in text:
                 text = text.split("```json")[1].split("```")[0].strip()
