@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.db
+.env
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-*
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# ChromaDB
+chroma_data/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Test
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Build artifacts
+*.whl
+*.tar.gz
+
+# Temp files
+*.tmp
+*.bak
+*.orig
+
+# Local scratch scripts - test_db.py holds a live database URL, and RAI.py
+# belongs to an unrelated project. Fenced off so `git add .` cannot publish them.
+/test_db.py
+/RAI.py
+/backend/test_gemini_json.py
+
+# Personal interview-prep notes (ARCHITECTURE.md is the repo-facing doc)
+/PROJECT_GUIDE.md
+/PROJECT_DEEP_DIVE.md
+/PROJECT_GUIDE.pdf
+/AgentFlow_Architecture.pdf
