@@ -44,3 +44,10 @@ services:
         value: "true"
       - key: DEMO_MAX_WORKFLOWS_PER_HOUR
         value: "10"
+      # Free instances have 512 MB. MLflow's local file store is wiped on every
+      # deploy anyway, so skip it; and cap glibc malloc arenas, which otherwise
+      # grow with the scraper threads and fragment memory.
+      - key: MLFLOW_ENABLED
+        value: "false"
+      - key: MALLOC_ARENA_MAX
+        value: "2"
