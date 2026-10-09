@@ -14,7 +14,7 @@
 
 *Production-grade AI platform that orchestrates intelligent agents to gather, analyze, and deliver real-time market intelligence from multiple data sources.*
 
-**[▶ Live demo](https://YOUR-APP.vercel.app)** — click *Try the live demo*, no signup needed
+**[▶ Live demo](https://agent-flow-ten-topaz.vercel.app)** — click *Try the live demo*, no signup needed
 
 ---
 
