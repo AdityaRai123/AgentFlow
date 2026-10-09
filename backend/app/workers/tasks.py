@@ -1,6 +1,9 @@
 """Background task worker - executes LangGraph workflows and persists results."""
 
+import ctypes
+import gc
 import json
+import sys
 from datetime import datetime, timezone
 from uuid import UUID
 from sqlalchemy import update
@@ -17,6 +20,21 @@ from app.rag.indexer import index_workflow_items
 from app.core.tracking import log_workflow_run
 
 logger = get_logger(__name__)
+
+
+def _release_memory() -> None:
+    """Return memory freed by a finished workflow to the OS.
+
+    A run allocates large transient structures (scraped corpora, TF-IDF
+    matrices, LLM responses). CPython frees them, but glibc keeps the pages,
+    so RSS ratchets up run after run until a 512 MB host kills the process.
+    """
+    gc.collect()
+    if sys.platform.startswith("linux"):
+        try:
+            ctypes.CDLL("libc.so.6").malloc_trim(0)
+        except OSError:
+            pass
 
 async def execute_workflow_task(workflow_id: UUID, query: str, sources: list[str], user_id: UUID):
     logger.info(f"Background task starting for workflow {workflow_id}")
@@ -180,3 +198,5 @@ async def execute_workflow_task(workflow_id: UUID, query: str, sources: list[str
                 await db.commit()
         except Exception as inner_e:
             logger.error(f"Failed to update workflow {workflow_id} as failed: {inner_e}")
+    finally:
+        _release_memory()
