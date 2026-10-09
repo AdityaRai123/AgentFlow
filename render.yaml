@@ -7,6 +7,8 @@ services:
     rootDir: backend
     dockerfilePath: ./Dockerfile
     plan: free
+    # Same region as the Neon database, so queries stay fast.
+    region: singapore
     healthCheckPath: /api/monitoring/health
     envVars:
       - key: APP_NAME
