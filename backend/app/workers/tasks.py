@@ -4,9 +4,8 @@ import json
 from datetime import datetime, timezone
 from uuid import UUID
 from sqlalchemy import update
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-from app.config import settings
+from app.database import async_session_factory
 from app.models.workflow import Workflow
 from app.models.scraped_data import ScrapedData
 from app.models.analytics import Analytics
@@ -22,10 +21,12 @@ logger = get_logger(__name__)
 async def execute_workflow_task(workflow_id: UUID, query: str, sources: list[str], user_id: UUID):
     logger.info(f"Background task starting for workflow {workflow_id}")
     
-    # Create an independent DB session for the background task
-    engine = create_async_engine(settings.DATABASE_URL)
-    session_maker = async_sessionmaker(engine, expire_on_commit=False)
-    
+    # Use the app's engine: it normalises hosted-Postgres URLs (Neon's
+    # postgresql://...?sslmode=require) for asyncpg. A raw engine built from
+    # settings.DATABASE_URL failed before the workflow was marked running,
+    # leaving it stuck in "pending" forever.
+    session_maker = async_session_factory
+
     try:
         async with session_maker() as db:
             # Mark workflow as running
@@ -179,5 +180,3 @@ async def execute_workflow_task(workflow_id: UUID, query: str, sources: list[str
                 await db.commit()
         except Exception as inner_e:
             logger.error(f"Failed to update workflow {workflow_id} as failed: {inner_e}")
-    finally:
-        await engine.dispose()
